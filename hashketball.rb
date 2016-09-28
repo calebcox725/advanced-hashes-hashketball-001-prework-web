@@ -119,7 +119,7 @@ end
 
 def players(team = nil)
   game_hash.each_with_object({}) do |(home_or_away,team_attributes),players_hash|
-    players_hash.merge!(team_attributes[:players]) if team_attributes[:team_name] == team   || !team
+    players_hash.merge!(team_attributes[:players]) if team_attributes[:team_name] == team || !team
   end
 end
 
@@ -180,20 +180,22 @@ def most_points_scored
 end
 
 def winning_team
+  home_team = game_hash[:home][:team_name]
   home_points = 0
-  game_hash[:home][:players].each do |name, stats|
+  players(home_team).each do |name, stats|
     home_points += stats[:points]
   end
 
+  away_team = game_hash[:away][:team_name]
   away_points = 0
-  game_hash[:away][:players].each do |name, stats|
+  players(away_team).each do |name, stats|
     away_points += stats[:points]
   end
 
   if home_points > away_points
-    game_hash[:home][:team_name]
+    home_team
   elsif home_points < away_points
-    game_hash[:away][:team_name]
+    away_team
   else
     "Draw"
   end
